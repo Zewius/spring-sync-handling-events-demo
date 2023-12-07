@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +40,11 @@ public class SpringEventSyncDemoApplication {
         log.info("Response received - {}", responseMessage);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("result", responseMessage != null ? "done" : "empty");
-        if (responseMessage != null) {
+
+        boolean responseReceived = responseMessage != null;
+
+        result.put("result", responseReceived ? "done" : "empty");
+        if (responseReceived) {
             result.put("message", responseMessage);
         }
 

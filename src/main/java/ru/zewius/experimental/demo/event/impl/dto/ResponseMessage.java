@@ -1,9 +1,9 @@
-package ru.zewius.experimental.demo;
+package ru.zewius.experimental.demo.event.impl.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RequestMessage extends Message {
+public class ResponseMessage extends Message {
 }

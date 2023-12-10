@@ -1,34 +1,29 @@
-package ru.zewius.experimental.demo;
+package ru.zewius.experimental.demo.event.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
+import ru.zewius.experimental.demo.event.EventService;
+import ru.zewius.experimental.demo.event.impl.dto.RequestMessage;
+import ru.zewius.experimental.demo.event.impl.dto.ResponseMessage;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-@Service
-public class EventService {
-
-    private static final Logger log = LoggerFactory.getLogger(EventService.class);
-
-    private static final long DEFAULT_TIMEOUT = 15000L;
+/**
+ * @deprecated due to the lack of requests identification, the first hit response will be processed, which is an error.
+ */
+@Slf4j
+@Deprecated(forRemoval = true)
+public class BlockingQueueEventService implements EventService<RequestMessage, ResponseMessage> {
 
     private final BlockingQueue<ResponseMessage> responseQueue = new LinkedBlockingQueue<>();
 
     private final ApplicationEventPublisher publisher;
 
-    @Autowired
-    public EventService(ApplicationEventPublisher publisher) {
+    public BlockingQueueEventService(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
-    }
-
-    public ResponseMessage sendEvent(RequestMessage event) {
-        return sendEvent(event, DEFAULT_TIMEOUT);
     }
 
     public ResponseMessage sendEvent(RequestMessage event, long timeout) {
@@ -56,7 +51,7 @@ public class EventService {
     }
 
     @EventListener
-    public void receiveEvent(ResponseMessage event) {
+    private void receiveEvent(ResponseMessage event) {
         log.info("Response message was read: {}", event);
 
         // Добавляем полученное событие в очередь ответов
